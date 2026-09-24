@@ -3,24 +3,18 @@
 import { useMemo, useState } from "react"
 import {
   Check,
+  ClipboardCopy,
   Copy,
-  Database,
+  ExternalLink,
   Link2,
   Loader2,
   Sparkles,
   TriangleAlert,
 } from "lucide-react"
 import { toast } from "sonner"
+import { Surface } from "@/components/app-shell"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
-import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
@@ -154,246 +148,212 @@ export function CreateForm({ hasDatabase }: CreateFormProps) {
   }
 
   return (
-    <div className="flex flex-col gap-6">
-      <Card className="border-0 bg-card/80 ring-1 ring-white/10 backdrop-blur">
-        <CardHeader className="gap-2">
-          <div className="flex flex-wrap items-center gap-2">
-            <CardTitle className="text-lg">Build an action link</CardTitle>
-            <Badge variant="outline">
-              {hasDatabase ? (
-                <>
-                  <Database />
-                  Supabase
-                </>
-              ) : (
-                <>
-                  <Link2 />
-                  Self-contained
-                </>
-              )}
-            </Badge>
-          </div>
-          <CardDescription>
-            {hasDatabase
-              ? "Links are stored in Supabase, so long articles get a short /g/id URL."
-              : "No database is configured. The shareable URL carries a signed payload, so keep it short."}
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <form className="flex flex-col gap-6" onSubmit={onSubmit} autoComplete="off">
-            <div className="flex flex-col gap-2">
-              <div className="flex flex-wrap items-center justify-between gap-2">
-                <Label htmlFor="destination">Destination URL</Label>
-                <button
-                  type="button"
-                  onClick={applyXArticlesPreset}
-                  className="inline-flex items-center gap-1.5 rounded-full border border-primary/30 bg-primary/10 px-2.5 py-1 text-xs font-medium text-primary transition-colors hover:bg-primary/20"
-                >
-                  <Sparkles className="size-3" />
-                  X Articles
-                </button>
-              </div>
-              <Input
-                id="destination"
-                name="destination"
-                type="text"
-                inputMode="url"
-                autoComplete="off"
-                spellCheck={false}
-                required
-                placeholder="https://"
-                value={destination}
-                onChange={(event) => setDestination(event.target.value)}
-                onInput={(event) => setDestination(event.currentTarget.value)}
-                aria-invalid={Boolean(destination) && !parsedDestination.ok}
-              />
-              <p className="text-xs text-muted-foreground">
-                {destinationHost
-                  ? `Opens ${destinationHost}`
-                  : "Required. Example: https://x.com/compose/articles"}
-              </p>
-            </div>
-
-            <div className="flex flex-col gap-2">
-              <Label htmlFor="label">Label</Label>
-              <Input
-                id="label"
-                name="label"
-                placeholder="X article draft"
-                value={label}
-                maxLength={120}
-                onChange={(event) => setLabel(event.target.value)}
-              />
-              <p className="text-xs text-muted-foreground">
-                Optional name shown on the intermediate page.
-              </p>
-            </div>
-
-            <fieldset className="flex flex-col gap-3">
-              <legend className="text-sm font-medium">Action type</legend>
-              <RadioGroup
-                value={actionType}
-                onValueChange={(value) => setActionType(value as ActionType)}
-                className="grid gap-2"
+    <div className="flex flex-col gap-4">
+      <Surface className="p-5 sm:p-6">
+        <form className="flex flex-col gap-5" onSubmit={onSubmit} autoComplete="off">
+          <div className="flex flex-col gap-2">
+            <div className="flex flex-wrap items-center justify-between gap-2">
+              <Label htmlFor="destination">Destination</Label>
+              <button
+                type="button"
+                onClick={applyXArticlesPreset}
+                className="inline-flex items-center gap-1.5 rounded-full border border-border bg-muted px-2.5 py-1 text-xs font-medium tracking-tight text-foreground transition-colors hover:bg-accent"
               >
-                <ActionChoice
-                  id="action-copy"
-                  value="copy_then_redirect"
-                  title="Copy, then redirect"
-                  description="Write clipboard text with the click, then open the destination."
-                />
-                <ActionChoice
-                  id="action-redirect"
-                  value="redirect_only"
-                  title="Redirect only"
-                  description="Skip the clipboard. Still show an intermediate page, then continue."
-                />
-              </RadioGroup>
-            </fieldset>
-
-            {actionType === "copy_then_redirect" ? (
-              <div className="flex flex-col gap-3">
-                <Label>Clipboard text</Label>
-                <Tabs
-                  value={clipboardMode}
-                  onValueChange={(value) =>
-                    setClipboardMode(value as ClipboardMode)
-                  }
-                >
-                  <TabsList>
-                    <TabsTrigger value="split">Title + body</TabsTrigger>
-                    <TabsTrigger value="single">One field</TabsTrigger>
-                  </TabsList>
-                  <TabsContent value="split" className="flex flex-col gap-3 pt-3">
-                    <Input
-                      id="title"
-                      name="title"
-                      placeholder="Article title"
-                      value={title}
-                      autoComplete="off"
-                      onChange={(event) => setTitle(event.target.value)}
-                      onInput={(event) => setTitle(event.currentTarget.value)}
-                      onKeyDown={(event) => {
-                        if (event.key === "Enter") event.preventDefault()
-                      }}
-                    />
-                    <Textarea
-                      id="body"
-                      name="body"
-                      placeholder="Article body, markdown or plain text"
-                      value={body}
-                      onChange={(event) => setBody(event.target.value)}
-                      onInput={(event) => setBody(event.currentTarget.value)}
-                      className="min-h-40"
-                    />
-                  </TabsContent>
-                  <TabsContent value="single" className="pt-3">
-                    <Textarea
-                      id="single"
-                      placeholder="Paste the full title and body as markdown or plain text"
-                      value={single}
-                      onChange={(event) => setSingle(event.target.value)}
-                      className="min-h-48"
-                    />
-                  </TabsContent>
-                </Tabs>
-                <p className="text-xs text-muted-foreground">
-                  {clipboardText
-                    ? `${clipboardText.length.toLocaleString()} characters will be copied.`
-                    : "Optional. If empty, the link still opens the destination."}
-                </p>
-              </div>
+                <Sparkles className="size-3" />
+                X Articles
+              </button>
+            </div>
+            <Input
+              id="destination"
+              name="destination"
+              type="text"
+              inputMode="url"
+              autoComplete="off"
+              spellCheck={false}
+              required
+              placeholder="https://"
+              value={destination}
+              onChange={(event) => setDestination(event.target.value)}
+              onInput={(event) => setDestination(event.currentTarget.value)}
+              aria-invalid={Boolean(destination) && !parsedDestination.ok}
+            />
+            {destinationHost ? (
+              <p className="text-xs text-muted-foreground">{destinationHost}</p>
             ) : null}
+          </div>
 
-            {!hasDatabase ? (
-              <p
-                className={
-                  overLimit
-                    ? "text-xs font-medium text-destructive"
-                    : "text-xs text-muted-foreground"
+          <div className="flex flex-col gap-2">
+            <Label htmlFor="label">Label</Label>
+            <Input
+              id="label"
+              name="label"
+              placeholder="X article draft"
+              value={label}
+              maxLength={120}
+              onChange={(event) => setLabel(event.target.value)}
+            />
+          </div>
+
+          <fieldset className="flex flex-col gap-2">
+            <legend className="text-sm font-medium">Action</legend>
+            <RadioGroup
+              value={actionType}
+              onValueChange={(value) => setActionType(value as ActionType)}
+              className="grid gap-2 sm:grid-cols-2"
+            >
+              <ActionChoice
+                id="action-copy"
+                value="copy_then_redirect"
+                icon={<ClipboardCopy className="size-4" />}
+                title="Copy, then go"
+              />
+              <ActionChoice
+                id="action-redirect"
+                value="redirect_only"
+                icon={<ExternalLink className="size-4" />}
+                title="Redirect only"
+              />
+            </RadioGroup>
+          </fieldset>
+
+          {actionType === "copy_then_redirect" ? (
+            <div className="flex flex-col gap-2.5">
+              <Label>Clipboard</Label>
+              <Tabs
+                value={clipboardMode}
+                onValueChange={(value) =>
+                  setClipboardMode(value as ClipboardMode)
                 }
               >
-                Estimated signed URL payload: {estimatedLength.toLocaleString()} /{" "}
-                {MAX_SELF_CONTAINED_CHARS.toLocaleString()} characters
-                {overLimit
-                  ? " — too long for a self-contained link. Shorten the text or configure Supabase."
-                  : "."}
+                <TabsList>
+                  <TabsTrigger value="split">Title + body</TabsTrigger>
+                  <TabsTrigger value="single">One field</TabsTrigger>
+                </TabsList>
+                <TabsContent value="split" className="flex flex-col gap-2.5 pt-2.5">
+                  <Input
+                    id="title"
+                    name="title"
+                    placeholder="Article title"
+                    value={title}
+                    autoComplete="off"
+                    onChange={(event) => setTitle(event.target.value)}
+                    onInput={(event) => setTitle(event.currentTarget.value)}
+                    onKeyDown={(event) => {
+                      if (event.key === "Enter") event.preventDefault()
+                    }}
+                  />
+                  <Textarea
+                    id="body"
+                    name="body"
+                    placeholder="Body"
+                    value={body}
+                    onChange={(event) => setBody(event.target.value)}
+                    onInput={(event) => setBody(event.currentTarget.value)}
+                    className="min-h-32"
+                  />
+                </TabsContent>
+                <TabsContent value="single" className="pt-2.5">
+                  <Textarea
+                    id="single"
+                    placeholder="Title and body"
+                    value={single}
+                    onChange={(event) => setSingle(event.target.value)}
+                    className="min-h-36"
+                  />
+                </TabsContent>
+              </Tabs>
+              <p className="text-xs text-muted-foreground">
+                {clipboardText
+                  ? `${clipboardText.length.toLocaleString()} characters`
+                  : "Optional"}
               </p>
-            ) : null}
+            </div>
+          ) : null}
 
-            {overLimit ? (
-              <Alert variant="destructive">
-                <TriangleAlert />
-                <AlertTitle>Database required for this payload</AlertTitle>
-                <AlertDescription>
-                  Self-contained links must stay under {MAX_SELF_CONTAINED_CHARS}{" "}
-                  characters. Add{" "}
-                  <code className="font-mono">NEXT_PUBLIC_SUPABASE_URL</code> and a
-                  Supabase key to store long articles as short /g/id links.
-                </AlertDescription>
-              </Alert>
-            ) : null}
-
-            {formError ? (
-              <Alert variant="destructive">
-                <TriangleAlert />
-                <AlertTitle>Could not create the link</AlertTitle>
-                <AlertDescription>{formError}</AlertDescription>
-              </Alert>
-            ) : null}
-
-            <Button
-              type="submit"
-              size="lg"
-              className="h-11 w-full sm:w-auto"
-              disabled={submitting}
+          {!hasDatabase ? (
+            <p
+              className={
+                overLimit
+                  ? "text-xs font-medium text-destructive"
+                  : "text-xs text-muted-foreground"
+              }
             >
-              {submitting ? (
-                <Loader2 data-icon="inline-start" className="animate-spin" />
-              ) : (
-                <Link2 data-icon="inline-start" />
-              )}
-              {submitting ? "Creating…" : "Create action link"}
-            </Button>
-          </form>
-        </CardContent>
-      </Card>
+              {estimatedLength.toLocaleString()} /{" "}
+              {MAX_SELF_CONTAINED_CHARS.toLocaleString()}
+              {overLimit ? " — too long for a self-contained link" : ""}
+            </p>
+          ) : null}
+
+          {overLimit ? (
+            <Alert variant="destructive">
+              <TriangleAlert />
+              <AlertTitle>Database required for this payload</AlertTitle>
+              <AlertDescription>
+                Self-contained links must stay under {MAX_SELF_CONTAINED_CHARS}{" "}
+                characters. Add{" "}
+                <code className="font-mono">NEXT_PUBLIC_SUPABASE_URL</code> and a
+                Supabase key to store long articles as short /g/id links.
+              </AlertDescription>
+            </Alert>
+          ) : null}
+
+          {formError ? (
+            <Alert variant="destructive">
+              <TriangleAlert />
+              <AlertTitle>Could not create the link</AlertTitle>
+              <AlertDescription>{formError}</AlertDescription>
+            </Alert>
+          ) : null}
+
+          <Button
+            type="submit"
+            size="lg"
+            className="h-11 w-full"
+            disabled={submitting}
+          >
+            {submitting ? (
+              <Loader2 data-icon="inline-start" className="animate-spin" />
+            ) : (
+              <Link2 data-icon="inline-start" />
+            )}
+            {submitting ? "Creating…" : "Create action link"}
+          </Button>
+        </form>
+      </Surface>
 
       {created ? (
-        <Card className="border-0 bg-primary/10 ring-1 ring-primary/25">
-          <CardHeader>
-            <CardTitle className="text-lg">Shareable URL</CardTitle>
-            <CardDescription>
-              {created.storage === "supabase"
-                ? "Short database-backed link."
-                : "Signed self-contained link. Anyone with the URL can run the action."}
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="flex flex-col gap-3">
-            <div className="flex flex-col gap-2 sm:flex-row">
-              <Input
-                readOnly
-                value={created.url}
-                className="font-mono text-xs sm:text-sm"
-                onFocus={(event) => event.currentTarget.select()}
-              />
-              <Button type="button" className="h-8 sm:h-8" onClick={copyShareUrl}>
-                {copied ? (
-                  <Check data-icon="inline-start" />
-                ) : (
-                  <Copy data-icon="inline-start" />
-                )}
-                {copied ? "Copied" : "Copy"}
-              </Button>
-            </div>
-            <a
-              href={created.url}
-              className="text-sm font-medium text-primary underline-offset-4 hover:underline"
-            >
-              Open the intermediate page
-            </a>
-          </CardContent>
-        </Card>
+        <Surface className="flex flex-col gap-3 p-5 sm:p-6">
+          <div className="flex items-center justify-between gap-2">
+            <h2 className="font-heading text-base font-semibold tracking-tight">
+              Shareable URL
+            </h2>
+            <span className="text-xs text-muted-foreground">
+              {created.storage === "supabase" ? "Short link" : "Signed link"}
+            </span>
+          </div>
+          <div className="flex flex-col gap-2 sm:flex-row">
+            <Input
+              readOnly
+              value={created.url}
+              className="font-mono text-xs sm:text-sm"
+              onFocus={(event) => event.currentTarget.select()}
+            />
+            <Button type="button" className="h-9" onClick={copyShareUrl}>
+              {copied ? (
+                <Check data-icon="inline-start" />
+              ) : (
+                <Copy data-icon="inline-start" />
+              )}
+              {copied ? "Copied" : "Copy"}
+            </Button>
+          </div>
+          <a
+            href={created.url}
+            className="text-sm font-medium tracking-tight text-primary underline-offset-4 hover:underline"
+          >
+            Open Copy & continue
+          </a>
+        </Surface>
       ) : null}
     </div>
   )
@@ -402,22 +362,23 @@ export function CreateForm({ hasDatabase }: CreateFormProps) {
 function ActionChoice({
   id,
   value,
+  icon,
   title,
-  description,
 }: {
   id: string
   value: ActionType
+  icon: React.ReactNode
   title: string
-  description: string
 }) {
   return (
-    <div className="flex items-start gap-3 rounded-xl border border-border/80 bg-background/40 p-3 has-[[data-state=checked]]:border-primary/50 has-[[data-state=checked]]:bg-primary/8 has-[[data-checked]]:border-primary/50 has-[[data-checked]]:bg-primary/8">
-      <RadioGroupItem value={value} id={id} className="mt-0.5" />
-      <Label htmlFor={id} className="flex flex-col items-start gap-1 font-normal">
-        <span className="font-medium text-foreground">{title}</span>
-        <span className="text-sm leading-relaxed font-normal text-muted-foreground">
-          {description}
-        </span>
+    <div className="flex items-center gap-3 rounded-xl border border-border bg-muted/50 px-3 py-2.5 has-[[data-state=checked]]:border-foreground/40 has-[[data-state=checked]]:bg-muted has-[[data-checked]]:border-foreground/40 has-[[data-checked]]:bg-muted">
+      <RadioGroupItem value={value} id={id} />
+      <Label
+        htmlFor={id}
+        className="flex flex-1 items-center gap-2 font-medium tracking-tight"
+      >
+        <span className="text-muted-foreground">{icon}</span>
+        {title}
       </Label>
     </div>
   )

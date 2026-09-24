@@ -11,10 +11,10 @@ export function Brand({ className }: { className?: string }) {
         className
       )}
     >
-      <span className="flex size-8 items-center justify-center rounded-lg bg-primary text-primary-foreground shadow-[0_0_24px_color-mix(in_oklch,var(--primary)_45%,transparent)]">
-        <ArrowUpRight className="size-4" strokeWidth={2.5} />
+      <span className="flex size-8 items-center justify-center rounded-lg bg-primary text-primary-foreground">
+        <ArrowUpRight className="size-4" strokeWidth={2.25} />
       </span>
-      <span className="font-heading text-base font-semibold tracking-tight">
+      <span className="font-heading text-[15px] font-semibold tracking-tight">
         Go Action
       </span>
     </Link>
