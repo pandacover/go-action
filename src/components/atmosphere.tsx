@@ -6,7 +6,7 @@ export function Atmosphere() {
     >
       <div className="absolute inset-0 bg-[#0c0a14]" />
       <svg
-        className="absolute inset-0 h-full w-full origin-center scale-[1.35] blur-[72px]"
+        className="absolute inset-0 h-full w-full origin-center scale-[1.2] blur-[40px]"
         viewBox="0 0 1600 900"
         preserveAspectRatio="xMidYMid slice"
       >
@@ -61,8 +61,8 @@ export function Atmosphere() {
       </svg>
       <div className="absolute -top-[18%] left-[8%] size-[42rem] rounded-full bg-[radial-gradient(circle,oklch(0.62_0.12_300/0.28),transparent_68%)] blur-3xl" />
       <div className="absolute top-[38%] -right-[12%] size-[36rem] rounded-full bg-[radial-gradient(circle,oklch(0.7_0.1_40/0.22),transparent_70%)] blur-3xl" />
-      <div className="atmosphere-grain absolute inset-0 opacity-[0.18] mix-blend-overlay" />
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_50%_42%,transparent_28%,oklch(0.12_0.03_280/0.55)_100%)]" />
+      <div className="atmosphere-grain absolute inset-0 opacity-[0.22] mix-blend-overlay" />
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_50%_38%,transparent_18%,oklch(0.12_0.03_280/0.42)_100%)]" />
     </div>
   )
 }

@@ -198,9 +198,9 @@ export function CreateForm({ hasDatabase }: CreateFormProps) {
               onInput={(event) => setDestination(event.currentTarget.value)}
               aria-invalid={Boolean(destination) && !parsedDestination.ok}
             />
-            <p className="text-xs text-muted-foreground">
-              {destinationHost ? destinationHost : "Required"}
-            </p>
+            {destinationHost ? (
+              <p className="text-xs text-muted-foreground">{destinationHost}</p>
+            ) : null}
           </div>
 
           <div className="flex flex-col gap-2">
