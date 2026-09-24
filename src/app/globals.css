@@ -48,6 +48,10 @@
   --radius-4xl: calc(var(--radius) * 2.6);
 }
 
+/* PROVISIONAL tokens — not a locked design-system hex set.
+   Invented for this restyle from Horizon signals (Mercury dusk/glass,
+   Geist craft, quiet chrome). Palette is oklch dusk + moonlight cream,
+   not a specified brand lock. Revisit if aura ratings add a color lock. */
 :root {
   --background: oklch(0.145 0.03 280);
   --foreground: oklch(0.97 0.01 90);

@@ -1,3 +1,4 @@
+/* PROVISIONAL atmosphere paints (SVG hex + oklch washes) — not a locked brand set. */
 export function Atmosphere() {
   return (
     <div

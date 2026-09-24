@@ -5,7 +5,6 @@ import {
   Check,
   ClipboardCopy,
   Copy,
-  Database,
   ExternalLink,
   Link2,
   Loader2,
@@ -15,7 +14,6 @@ import {
 import { toast } from "sonner"
 import { Surface } from "@/components/app-shell"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
-import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -153,25 +151,6 @@ export function CreateForm({ hasDatabase }: CreateFormProps) {
     <div className="flex flex-col gap-4">
       <Surface className="p-5 sm:p-6">
         <form className="flex flex-col gap-5" onSubmit={onSubmit} autoComplete="off">
-          <div className="flex flex-wrap items-center justify-between gap-2">
-            <h2 className="font-heading text-base font-semibold tracking-tight">
-              New link
-            </h2>
-            <Badge variant="outline" className="border-white/15 bg-white/5">
-              {hasDatabase ? (
-                <>
-                  <Database />
-                  Supabase
-                </>
-              ) : (
-                <>
-                  <Link2 />
-                  Self-contained
-                </>
-              )}
-            </Badge>
-          </div>
-
           <div className="flex flex-col gap-2">
             <div className="flex flex-wrap items-center justify-between gap-2">
               <Label htmlFor="destination">Destination</Label>

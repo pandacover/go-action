@@ -1,12 +1,67 @@
-import { cn } from "@/lib/utils"
+import Link from "next/link"
+import { ArrowUpRight, ClipboardCopy, Database, Link2 } from "lucide-react"
+import { Brand } from "@/components/brand"
 import { SiteHeader } from "@/components/site-header"
+import { cn } from "@/lib/utils"
 
-export function ComposerShell({ children }: { children: React.ReactNode }) {
+/** Product chrome for create/home. /g stays on GestureShell — no sidebar there. */
+
+export function ComposerShell({
+  children,
+  hasDatabase,
+}: {
+  children: React.ReactNode
+  hasDatabase: boolean
+}) {
   return (
-    <div className="relative mx-auto flex min-h-dvh w-full max-w-[42rem] flex-col px-4 py-5 sm:py-6">
-      <SiteHeader />
-      <main className="mt-6 flex flex-1 flex-col gap-5 pb-8">{children}</main>
+    <div className="relative flex min-h-dvh">
+      <AppSidebar hasDatabase={hasDatabase} />
+      <div className="flex min-w-0 flex-1 flex-col">
+        <SiteHeader />
+        <main className="flex-1 overflow-auto">
+          <div className="flex w-full max-w-[42rem] flex-col gap-5 px-4 py-6 sm:px-8 sm:py-7">
+            {children}
+          </div>
+        </main>
+      </div>
     </div>
+  )
+}
+
+function AppSidebar({ hasDatabase }: { hasDatabase: boolean }) {
+  return (
+    <aside className="sticky top-0 hidden h-dvh w-60 shrink-0 flex-col border-r border-white/10 bg-black/25 backdrop-blur-2xl md:flex">
+      <div className="flex h-12 items-center px-3">
+        <Brand />
+      </div>
+      <nav className="flex flex-col gap-1 px-2 pt-3" aria-label="App">
+        <Link
+          href="/"
+          aria-current="page"
+          className="flex items-center gap-2 rounded-md bg-white/10 px-2.5 py-1.5 text-sm font-medium tracking-tight text-foreground"
+        >
+          <Link2 className="size-4" strokeWidth={2} />
+          Create
+        </Link>
+      </nav>
+      <div className="mt-6 px-3" aria-hidden>
+        <div className="flex items-center justify-between rounded-xl bg-white/5 px-3 py-2.5 ring-1 ring-white/10">
+          <ClipboardCopy className="size-4 text-muted-foreground" />
+          <span className="text-[11px] text-white/35">→</span>
+          <ArrowUpRight className="size-4 text-muted-foreground" />
+        </div>
+      </div>
+      <div className="mt-auto border-t border-white/10 px-3 py-3">
+        <p className="flex items-center gap-2 text-xs tracking-tight text-muted-foreground">
+          {hasDatabase ? (
+            <Database className="size-3.5" />
+          ) : (
+            <Link2 className="size-3.5" />
+          )}
+          {hasDatabase ? "Supabase" : "Self-contained"}
+        </p>
+      </div>
+    </aside>
   )
 }
 
