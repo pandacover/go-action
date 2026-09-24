@@ -19,7 +19,7 @@ export function ComposerShell({
       <div className="flex min-w-0 flex-1 flex-col">
         <SiteHeader />
         <main className="flex-1 overflow-auto">
-          <div className="flex w-full max-w-[42rem] flex-col gap-5 px-4 py-6 sm:px-8 sm:py-7">
+          <div className="flex w-full max-w-3xl flex-col gap-5 px-5 py-5 sm:px-8 sm:py-6">
             {children}
           </div>
         </main>
@@ -45,13 +45,19 @@ function AppSidebar({ hasDatabase }: { hasDatabase: boolean }) {
         </Link>
       </nav>
       <div className="mt-6 px-3" aria-hidden>
-        <div className="flex items-center justify-between rounded-xl bg-white/5 px-3 py-2.5 ring-1 ring-white/10">
-          <ClipboardCopy className="size-4 text-muted-foreground" />
-          <span className="text-[11px] text-white/35">→</span>
-          <ArrowUpRight className="size-4 text-muted-foreground" />
+        <div className="flex items-center gap-2 rounded-xl bg-white/5 px-3 py-2.5 ring-1 ring-white/10">
+          <ClipboardCopy className="size-3.5 text-muted-foreground" />
+          <span className="text-[11px] font-medium tracking-tight text-muted-foreground">
+            Copy
+          </span>
+          <span className="mx-auto text-[11px] text-white/30">→</span>
+          <ArrowUpRight className="size-3.5 text-muted-foreground" />
+          <span className="text-[11px] font-medium tracking-tight text-muted-foreground">
+            Go
+          </span>
         </div>
       </div>
-      <div className="mt-auto border-t border-white/10 px-3 py-3">
+      <div className="mt-auto border-t border-white/10 px-3 py-4">
         <p className="flex items-center gap-2 text-xs tracking-tight text-muted-foreground">
           {hasDatabase ? (
             <Database className="size-3.5" />
