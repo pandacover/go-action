@@ -7,18 +7,11 @@ import {
   ClipboardCopy,
   Copy,
   ExternalLink,
-  Info,
 } from "lucide-react"
 import { toast } from "sonner"
+import { Surface } from "@/components/app-shell"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { Button } from "@/components/ui/button"
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card"
 import {
   hostnameOf,
   truncatePreview,
@@ -93,98 +86,78 @@ export function ActionRuntime({ payload }: { payload: ActionLinkPayload }) {
   }
 
   return (
-    <Card className="border-0 bg-card/80 ring-1 ring-white/10 backdrop-blur">
-      <CardHeader className="gap-3">
-        <p className="text-xs font-medium tracking-widest text-primary uppercase">
-          Ready to go
+    <Surface className="flex flex-col gap-5 p-5 sm:p-6">
+      <div className="flex flex-col gap-2">
+        <p className="text-[11px] font-medium tracking-[0.16em] text-primary/90 uppercase">
+          {hostname}
         </p>
-        <CardTitle className="font-heading text-2xl leading-tight text-balance">
+        <h1 className="font-heading text-2xl leading-tight font-semibold tracking-tight text-balance">
           {payload.label || `Continue to ${hostname}`}
-        </CardTitle>
-        <CardDescription className="text-base">
-          This link opens{" "}
-          <span className="font-medium text-foreground">{hostname}</span>
-          {shouldCopy
-            ? " after copying the text below to your clipboard."
-            : "."}
-        </CardDescription>
-      </CardHeader>
-      <CardContent className="flex flex-col gap-5">
-        {shouldCopy ? (
-          <div className="rounded-xl bg-muted/60 px-3.5 py-3 ring-1 ring-white/8">
-            <p className="mb-1.5 text-xs font-medium tracking-wide text-muted-foreground uppercase">
-              Clipboard preview
-            </p>
-            <p className="font-mono text-sm leading-relaxed text-foreground/90">
-              {preview}
-            </p>
-            {clipboardText.length > preview.length ? (
-              <p className="mt-2 text-xs text-muted-foreground">
-                {clipboardText.length.toLocaleString()} characters total
-              </p>
-            ) : null}
-          </div>
-        ) : (
-          <p className="text-sm text-muted-foreground">
-            Nothing will be copied. You will go straight to the destination.
+        </h1>
+      </div>
+
+      {shouldCopy ? (
+        <div className="rounded-xl bg-black/20 px-3.5 py-3 ring-1 ring-white/10">
+          <p className="mb-1.5 text-[11px] font-medium tracking-[0.14em] text-muted-foreground uppercase">
+            Clipboard
           </p>
-        )}
+          <p className="font-mono text-sm leading-relaxed text-foreground/90">
+            {preview}
+          </p>
+          {clipboardText.length > preview.length ? (
+            <p className="mt-2 text-xs text-muted-foreground">
+              {clipboardText.length.toLocaleString()} characters
+            </p>
+          ) : null}
+        </div>
+      ) : (
+        <p className="text-sm text-muted-foreground">Nothing will be copied.</p>
+      )}
 
-        <Alert className="border-primary/20 bg-primary/8">
-          <Info className="size-4 text-primary" />
-          <AlertTitle>Why this extra click?</AlertTitle>
-          <AlertDescription>
-            Browsers block clipboard writes unless they happen in the same
-            moment as a user gesture. Go Action waits for your click, copies,
-            then sends you onward. There is no silent redirect.
-          </AlertDescription>
-        </Alert>
-
-        {fallback ? (
-          <div className="flex flex-col gap-3">
-            <Alert variant="destructive">
-              <AlertTriangle className="size-4" />
-              <AlertTitle>Clipboard was blocked</AlertTitle>
-              <AlertDescription>
-                Copy the full text below, then open the destination. Some
-                browsers require a permission prompt or a secure (https)
-                context.
-              </AlertDescription>
-            </Alert>
-            <textarea
-              ref={textareaRef}
-              readOnly
-              value={clipboardText}
-              className="min-h-40 w-full rounded-xl border border-input bg-input/40 p-3 font-mono text-sm outline-none selection:bg-primary/30"
-              onFocus={(event) => event.currentTarget.select()}
-            />
-            <div className="flex flex-col gap-2 sm:flex-row">
-              <Button
-                type="button"
-                size="lg"
-                className="h-11 flex-1"
-                onClick={onCopyFallback}
-              >
-                {copiedFallback ? (
-                  <Check data-icon="inline-start" />
-                ) : (
-                  <Copy data-icon="inline-start" />
-                )}
-                {copiedFallback ? "Copied" : "Copy text"}
-              </Button>
-              <Button
-                type="button"
-                size="lg"
-                variant="outline"
-                className="h-11 flex-1"
-                onClick={onOpenDestination}
-              >
-                <ExternalLink data-icon="inline-start" />
-                Open destination
-              </Button>
-            </div>
+      {fallback ? (
+        <div className="flex flex-col gap-3">
+          <Alert variant="destructive">
+            <AlertTriangle className="size-4" />
+            <AlertTitle>Clipboard was blocked</AlertTitle>
+            <AlertDescription>
+              Copy the text, then open the destination.
+            </AlertDescription>
+          </Alert>
+          <textarea
+            ref={textareaRef}
+            readOnly
+            value={clipboardText}
+            className="min-h-36 w-full rounded-xl border border-input bg-input/40 p-3 font-mono text-sm outline-none selection:bg-primary/30"
+            onFocus={(event) => event.currentTarget.select()}
+          />
+          <div className="flex flex-col gap-2 sm:flex-row">
+            <Button
+              type="button"
+              size="lg"
+              className="h-11 flex-1"
+              onClick={onCopyFallback}
+            >
+              {copiedFallback ? (
+                <Check data-icon="inline-start" />
+              ) : (
+                <Copy data-icon="inline-start" />
+              )}
+              {copiedFallback ? "Copied" : "Copy text"}
+            </Button>
+            <Button
+              type="button"
+              size="lg"
+              variant="outline"
+              className="h-11 flex-1"
+              onClick={onOpenDestination}
+            >
+              <ExternalLink data-icon="inline-start" />
+              Open destination
+            </Button>
           </div>
-        ) : (
+        </div>
+      ) : (
+        <div className="flex flex-col gap-2">
           <Button
             type="button"
             size="lg"
@@ -197,14 +170,13 @@ export function ActionRuntime({ payload }: { payload: ActionLinkPayload }) {
             ) : (
               <ExternalLink data-icon="inline-start" />
             )}
-            {busy
-              ? "Opening…"
-              : shouldCopy
-                ? "Copy & continue"
-                : "Continue"}
+            {busy ? "Opening…" : shouldCopy ? "Copy & continue" : "Continue"}
           </Button>
-        )}
-      </CardContent>
-    </Card>
+          <p className="text-center text-xs text-muted-foreground">
+            {shouldCopy ? `Copies, then opens ${hostname}` : `Opens ${hostname}`}
+          </p>
+        </div>
+      )}
+    </Surface>
   )
 }
