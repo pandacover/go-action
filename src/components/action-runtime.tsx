@@ -97,7 +97,7 @@ export function ActionRuntime({ payload }: { payload: ActionLinkPayload }) {
       </div>
 
       {shouldCopy ? (
-        <div className="rounded-xl bg-black/20 px-3.5 py-3 ring-1 ring-white/10">
+        <div className="rounded-xl bg-muted px-3.5 py-3 ring-1 ring-border">
           <p className="mb-1.5 text-[11px] font-medium tracking-[0.14em] text-muted-foreground uppercase">
             Clipboard
           </p>

@@ -30,7 +30,7 @@ export function ComposerShell({
 
 function AppSidebar({ hasDatabase }: { hasDatabase: boolean }) {
   return (
-    <aside className="sticky top-0 hidden h-dvh w-60 shrink-0 flex-col border-r border-white/10 bg-black/25 backdrop-blur-2xl md:flex">
+    <aside className="sticky top-0 hidden h-dvh w-60 shrink-0 flex-col border-r border-sidebar-border bg-sidebar md:flex">
       <div className="flex h-12 items-center px-3">
         <Brand />
       </div>
@@ -45,19 +45,19 @@ function AppSidebar({ hasDatabase }: { hasDatabase: boolean }) {
         </Link>
       </nav>
       <div className="mt-6 px-3" aria-hidden>
-        <div className="flex items-center gap-2 rounded-xl bg-white/5 px-3 py-2.5 ring-1 ring-white/10">
+        <div className="flex items-center gap-2 rounded-xl border border-border bg-muted px-3 py-2.5">
           <ClipboardCopy className="size-3.5 text-muted-foreground" />
           <span className="text-[11px] font-medium tracking-tight text-muted-foreground">
             Copy
           </span>
-          <span className="mx-auto text-[11px] text-white/30">→</span>
+          <span className="mx-auto text-[11px] text-muted-foreground">→</span>
           <ArrowUpRight className="size-3.5 text-muted-foreground" />
           <span className="text-[11px] font-medium tracking-tight text-muted-foreground">
             Go
           </span>
         </div>
       </div>
-      <div className="mt-auto border-t border-white/10 px-3 py-4">
+      <div className="mt-auto border-t border-sidebar-border px-3 py-4">
         <p className="flex items-center gap-2 text-xs tracking-tight text-muted-foreground">
           {hasDatabase ? (
             <Database className="size-3.5" />
@@ -86,5 +86,5 @@ export function Surface({
   className?: string
   children: React.ReactNode
 }) {
-  return <div className={cn("glass rounded-2xl", className)}>{children}</div>
+  return <div className={cn("rounded-xl border border-border bg-card", className)}>{children}</div>
 }

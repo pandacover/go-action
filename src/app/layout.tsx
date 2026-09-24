@@ -1,6 +1,5 @@
 import type { Metadata } from "next"
 import { Geist, Geist_Mono } from "next/font/google"
-import { Atmosphere } from "@/components/atmosphere"
 import { Toaster } from "@/components/ui/sonner"
 import "./globals.css"
 
@@ -30,10 +29,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       className={`dark ${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className={`${geistSans.className} min-h-full bg-background font-sans text-foreground`}>
-        <div className="relative isolate min-h-full">
-          <Atmosphere />
-          {children}
-        </div>
+        {children}
         <Toaster />
       </body>
     </html>

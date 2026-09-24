@@ -157,7 +157,7 @@ export function CreateForm({ hasDatabase }: CreateFormProps) {
               <button
                 type="button"
                 onClick={applyXArticlesPreset}
-                className="inline-flex items-center gap-1.5 rounded-full border border-white/15 bg-white/8 px-2.5 py-1 text-xs font-medium tracking-tight text-foreground/90 transition-colors hover:bg-white/14"
+                className="inline-flex items-center gap-1.5 rounded-full border border-border bg-muted px-2.5 py-1 text-xs font-medium tracking-tight text-foreground transition-colors hover:bg-accent"
               >
                 <Sparkles className="size-3" />
                 X Articles
@@ -371,7 +371,7 @@ function ActionChoice({
   title: string
 }) {
   return (
-    <div className="flex items-center gap-3 rounded-xl border border-white/12 bg-white/4 px-3 py-2.5 has-[[data-state=checked]]:border-primary/45 has-[[data-state=checked]]:bg-primary/10 has-[[data-checked]]:border-primary/45 has-[[data-checked]]:bg-primary/10">
+    <div className="flex items-center gap-3 rounded-xl border border-border bg-muted/50 px-3 py-2.5 has-[[data-state=checked]]:border-foreground/40 has-[[data-state=checked]]:bg-muted has-[[data-checked]]:border-foreground/40 has-[[data-checked]]:bg-muted">
       <RadioGroupItem value={value} id={id} />
       <Label
         htmlFor={id}
